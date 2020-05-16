@@ -4,7 +4,7 @@ module Memory(input clk, MemRead , MemWrite, rst,input [31:0]writeData, input[31
 	initial begin
 		#1000
 		$readmemh("./instructions.hex",mem,0);
-      		$readmemh("./memfile_data.hex",mem,250);
+      	$readmemh("./data.hex",mem,250);
 		$monitor(mem[500],mem[501]);
 	end
 	assign ReadData = MemRead ? mem[Address[31:2]] : 32'bZ;	
