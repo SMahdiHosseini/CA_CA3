@@ -1,4 +1,4 @@
-module DP(input[2:0] AluOperation,input[1:0] PCSrc,input[1:0] AluSrcB,input rst,clk,PcSrc,link,RegDst,RegWrite,AluSrcA,
+module DP(input[2:0] AluOperation,input[1:0] PCSrc,input[1:0] AluSrcB,input rst,clk,link,RegDst,RegWrite,AluSrcA,
 	IRWrite,IorD,MemWrite,MemRead,MemToReg,PCWrite,PCWriteCond,branch,output[5:0] func,output[5:0] opcode);
 		wire writePC,zero;
 		wire[31:0] pcSrc; wire[31:0] pc; wire[31:0] aluOut; wire[31:0] memAdr; wire[31:0] memOut;
