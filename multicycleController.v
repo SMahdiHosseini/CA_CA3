@@ -13,9 +13,8 @@ module centeralCU(AluOp, PCSrc, AluSrcB, clk, link, RegDst, RegWrite, AluSrcA,
 	
 	always@(ps, opcode)begin
     ns = IF;
-    {AluOp, PCSrc, AluSrcB, link, RegDst, RegWrite, AluSrcA, IRWrite, IorD, MemWrite, MemRead, MemToReg, PCWrite, PCWriteCond, branch} = 18'b0;
     case(ps)
-      IF: begin ns = ID; {MemRead, IRWrite, PCWrite, AluSrcB} = 5'b11101; end
+      IF: begin ns = ID; end
       ID: begin ns = (opcode == 6'b000000) ? RT0 : 
                      (opcode == 6'b000100) ? Beq : 
                      (opcode == 6'b000101) ? Bne : 
@@ -26,22 +25,43 @@ module centeralCU(AluOp, PCSrc, AluSrcB, clk, link, RegDst, RegWrite, AluSrcA,
                      (opcode == 6'b000001) ? Jr :
                      (opcode == 6'b001000) ? Addi0 :
                      (opcode == 6'b001100) ? Andi0 : IF;
-                AluSrcB = 2'b11;
           end
-      RT0: begin ns = RT1; {AluSrcA, AluOp} = 3'b110; end
-      RT1: begin ns = IF;  {RegDst, RegWrite} = 2'b11; end
-      Jump: begin ns = IF; {PCSrc, PCWrite} = 3'b101; end
-      Beq: begin ns = IF; {AluSrcA, AluOp, PCSrc, PCWriteCond, branch} = 7'b1010111; end
-      Bne: begin ns = IF; {AluSrcA, AluOp, PCSrc, PCWriteCond, branch} = 7'b1010110; end
-      Jr: begin ns = IF; {PCSrc, PCWrite} = 3'b111; end
-      Jal: begin ns = IF; {link, PCWrite, PCSrc} = 4'b1110; end
-      Memref: begin ns = (opcode == 6'b101011) ? SW : LW0; {AluSrcA, AluSrcB} = 3'b110; end
-      SW: begin ns = IF; {IorD, MemWrite} = 2'b11; end
-      LW0: begin ns = LW1; {IorD, MemRead} = 2'b11; end
-      LW1: begin ns = IF; {RegDst, MemToReg, RegWrite} = 3'b011; end
-      Addi0: begin ns = AndiAddi; {AluSrcA, AluSrcB} = 3'b111; end
-      Andi0: begin ns = AndiAddi; {AluSrcA, AluSrcB, AluOp} = 5'b11111; end
-      AndiAddi: begin ns = IF; RegWrite = 1'b1; end 
+      RT0: begin ns = RT1; end
+      RT1: begin ns = IF; end
+      Jump: begin ns = IF; end
+      Beq: begin ns = IF; end
+      Bne: begin ns = IF; end
+      Jr: begin ns = IF; end
+      Jal: begin ns = IF; end
+      Memref: begin ns = (opcode == 6'b101011) ? SW : LW0; end
+      SW: begin ns = IF; end
+      LW0: begin ns = LW1; end
+      LW1: begin ns = IF; end
+      Addi0: begin ns = AndiAddi; end
+      Andi0: begin ns = AndiAddi; end
+      AndiAddi: begin ns = IF; end 
+    endcase   
+	end
+	
+		always@(ps, opcode)begin
+    {AluOp, PCSrc, AluSrcB, link, RegDst, RegWrite, AluSrcA, IRWrite, IorD, MemWrite, MemRead, MemToReg, PCWrite, PCWriteCond, branch} = 18'b0;
+    case(ps)
+      IF: begin {MemRead, IRWrite, PCWrite, AluSrcB} = 5'b11101; end
+      ID: begin AluSrcB = 2'b11; end
+      RT0: begin {AluSrcA, AluOp} = 3'b110; end
+      RT1: begin {RegDst, RegWrite} = 2'b11; end
+      Jump: begin {PCSrc, PCWrite} = 3'b101; end
+      Beq: begin {AluSrcA, AluOp, PCSrc, PCWriteCond, branch} = 7'b1010111; end
+      Bne: begin {AluSrcA, AluOp, PCSrc, PCWriteCond, branch} = 7'b1010110; end
+      Jr: begin {PCSrc, PCWrite} = 3'b111; end
+      Jal: begin {link, PCWrite, PCSrc} = 4'b1110; end
+      Memref: begin {AluSrcA, AluSrcB} = 3'b110; end
+      SW: begin {IorD, MemWrite} = 2'b11; end
+      LW0: begin {IorD, MemRead} = 2'b11; end
+      LW1: begin {RegDst, MemToReg, RegWrite} = 3'b011; end
+      Addi0: begin {AluSrcA, AluSrcB} = 3'b110; end
+      Andi0: begin {AluSrcA, AluSrcB, AluOp} = 5'b11011; end
+      AndiAddi: begin RegWrite = 1'b1; end 
     endcase   
 	end
 	//sequensil
